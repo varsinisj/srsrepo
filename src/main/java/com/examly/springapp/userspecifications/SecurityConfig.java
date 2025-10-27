@@ -28,8 +28,10 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080")); // Adjust frontend origin
+    CorsConfiguration configuration = new CorsConfiguration();
+    // Use allowed origin patterns to be more flexible and avoid strict origin matching issues
+    // This works better when using credentials and deploy proxies (like Firebase/Railway)
+    configuration.setAllowedOriginPatterns(Arrays.asList("https://alumni-79c5d.web.app", "http://localhost:3000", "http://localhost:8080")); // Adjust frontend origin(s)
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
