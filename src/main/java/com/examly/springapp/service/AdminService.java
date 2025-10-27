@@ -130,6 +130,12 @@ public void deactivateUser(Long id) {
     userRepository.save(user);
 }
 
+public void activateUser(Long id) {
+    User user = getUserById(id);
+    user.setActive(true);
+    userRepository.save(user);
+}
+
 
    
 

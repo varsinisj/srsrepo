@@ -80,11 +80,27 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    // Activate user (patch)
+    @PatchMapping("/users/{userId}/activate")
+    public ResponseEntity<Void> activateUser(@PathVariable Long userId) {
+        adminService.activateUser(userId);
+        return ResponseEntity.noContent().build();
+    }
+
     // Delete user
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        adminService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+        try {
+            adminService.deleteUser(userId);
+            return ResponseEntity.noContent().build();
+        } catch (org.springframework.dao.DataIntegrityViolationException dive) {
+            // likely referenced by other entities (constraints) - return 409 Conflict with message
+            return ResponseEntity.status(409).build();
+        } catch (IllegalArgumentException iae) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
     }
 
     // Get counts by user type
